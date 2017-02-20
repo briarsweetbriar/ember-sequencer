@@ -7,8 +7,7 @@ const {
   computed,
   get,
   getOwner,
-  isPresent,
-  set
+  isPresent
 } = Ember;
 
 export default Component.extend({
@@ -39,7 +38,7 @@ export default Component.extend({
   _animateNextFrame() {
     const index = this.incrementProperty('index');
     const frames = get(this, 'frames');
-    const previousFrame = frames[index - 1]
+    const previousFrame = frames[index - 1];
     const nextFrame = frames[index];
 
     if (isPresent(nextFrame)) {
@@ -59,16 +58,19 @@ export default Component.extend({
 
   actions: {
     preloadNextFrame() {
+      if (this.get('isDestroyed')) { return; }
       const nextFrame = get(this, 'frames')[get(this, 'index') + 1];
 
       if (isPresent(nextFrame)) { nextFrame.preload(); }
     },
 
     registerFrame(frame) {
+      if (this.get('isDestroyed')) { return; }
       get(this, 'frames').addObject(frame);
     },
 
     transitionToNextFrame() {
+      if (this.get('isDestroyed')) { return; }
       this._animateNextFrame();
     }
   }

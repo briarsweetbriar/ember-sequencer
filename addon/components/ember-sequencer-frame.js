@@ -3,13 +3,12 @@ import layout from '../templates/components/ember-sequencer-frame';
 
 const {
   Component,
-  computed,
   get,
-  observer,
   set
 } = Ember;
 
-const { run: { later } } = Ember;
+const { run } = Ember;
+const { later } = run;
 
 export default Component.extend({
   layout,
@@ -24,26 +23,34 @@ export default Component.extend({
   },
 
   animateIn() {
+    if (this.get('isDestroyed')) { return; }
     set(this, 'isRendered', true);
     set(this, 'isVisible', true);
     set(this, 'isPreloading', false);
 
     get(this, 'animationAdapter').animate(this.element, get(this, 'animationIn')).then(() => {
-      this.attrs.preloadNextFrame();
+      run(() => {
+        this.attrs.preloadNextFrame();
 
-      later(() => {
-        this.attrs.transitionToNextFrame();
-      }, get(this, 'duration'));
+        later(() => {
+          this.attrs.transitionToNextFrame();
+        }, get(this, 'duration'));
+      });
     });
   },
 
   animateOut() {
     get(this, 'animationAdapter').animate(this.element, get(this, 'animationOut')).then(() => {
-      set(this, 'isRendered', false);
+      run(() => {
+        if (this.get('isDestroyed')) { return; }
+        set(this, 'isRendered', false);
+        set(this, 'isVisible', false);
+      });
     });
   },
 
   preload() {
+    if (this.get('isDestroyed')) { return; }
     set(this, 'isRendered', true);
     set(this, 'isPreloading', true);
   }

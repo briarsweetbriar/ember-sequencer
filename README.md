@@ -1,3 +1,6 @@
+[![npm version](https://badge.fury.io/js/ember-sequencer.svg)](https://badge.fury.io/js/ember-sequencer)
+[![Build Status](https://travis-ci.org/null-null-null/ember-sequencer.svg?branch=master)](https://travis-ci.org/null-null-null/ember-sequencer)
+
 # ember-sequencer
 
 A simple Ember.js sequencer, allowing you to string together a series of frames defined directly within your template.

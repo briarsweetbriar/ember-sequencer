@@ -1,0 +1,1 @@
+export { default } from 'ember-sequencer/components/ember-sequencer-frame';

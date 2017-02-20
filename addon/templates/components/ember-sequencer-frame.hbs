@@ -1,1 +1,3 @@
-{{yield}}
+{{#if isRendered}}
+  {{yield (hash isVisible=isVisible)}}
+{{/if}}

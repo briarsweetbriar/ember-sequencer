@@ -1,27 +1,47 @@
 # ember-sequencer
 
-This README outlines the details of collaborating on this Ember addon.
+A simple Ember.js sequencer, allowing you to string together a series of frames defined directly within your template.
 
-## Installation
+## installation
 
-* `git clone <repository-url>` this repository
-* `cd ember-sequencer`
-* `npm install`
-* `bower install`
+```bash
+ember install ember-sequencer
+```
 
-## Running
+## usage
 
-* `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
+```hbs
+{{#ember-sequencer
+  animationAdapter="velocity"
+  animationIn=(hash duration=1000 effect=(hash translateX=(array 0 '100%') opacity=(array 1 0)))
+  animationOut=(hash duration=1000 effect=(hash opacity=0))
+  as |sequencer|}}
+  {{#sequencer.frame}}
+    <div>Frame 1</div>
+  {{/sequencer.frame}}
+  {{#sequencer.frame}}
+    <img src="my-image.png">
+  {{/sequencer.frame}}
+  {{#sequencer.frame as |frame|}}
+    <h1>Sub-Sequencer</h1>
+    {{#if frame.isVisible}}
+      {{#ember-sequencer
+        animationAdapter="velocity"
+        animationIn=(hash duration=1000 effect=(hash translateY=(array 0 '-100%') opacity=(array 1 0)))
+        animationOut=(hash duration=1000 effect=(hash opacity=0))
+        as |sub-sequencer|}}
+        {{#sub-sequencer.frame}}
+          <div>Frame 1</div>
+        {{/sub-sequencer.frame}}
+        {{#sub-sequencer.frame}}
+          <div>Frame 2</div>
+        {{/sub-sequencer.frame}}
+        {{#sub-sequencer.frame}}
+          <div>Frame 3</div>
+        {{/sub-sequencer.frame}}
+      {{/ember-sequencer}}
+    {{/if}}
+  {{/sequencer.frame}}
+{{/ember-sequencer}}
 
-## Running Tests
-
-* `npm test` (Runs `ember try:each` to test your addon against multiple Ember versions)
-* `ember test`
-* `ember test --server`
-
-## Building
-
-* `ember build`
-
-For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
+```

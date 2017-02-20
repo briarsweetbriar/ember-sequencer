@@ -1,1 +1,11 @@
-{{yield}}
+{{yield (hash
+  frame=(component "ember-sequencer-frame"
+    animationAdapter=resolvedAnimationAdapter
+    animationIn=animationIn
+    animationOut=animationOut
+    duration=frameDuration
+    preloadNextFrame=(action "preloadNextFrame")
+    register=(action "registerFrame")
+    transitionToNextFrame=(action "transitionToNextFrame")
+  )
+)}}

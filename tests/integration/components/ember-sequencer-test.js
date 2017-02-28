@@ -36,14 +36,14 @@ test('it coordinates the frames', function(assert) {
 
   Ember.run.next(() => {
     assert.equal($hook('test1').text(), '1', 'first frame rendered initially');
-    assert.ok(!$hook('test2').text(), 'second frame not rendered initially');
-    assert.ok(!$hook('test3').text(), 'third frame not rendered initially');
+    assert.ok($hook('test2').text(), 'second frame rendered initially');
+    assert.ok($hook('test3').text(), 'third frame rendered initially');
   });
 
   Ember.run.later(() => {
     assert.equal($hook('test1').text(), '1', 'first frame rendered during first transition');
     assert.equal($hook('test2').text(), '2', 'second frame rendered during first transition');
-    assert.ok(!$hook('test3').text(), 'third frame not rendered during first transition');
+    assert.ok($hook('test3').text(), 'third frame rendered during first transition');
   }, 1000);
 
   Ember.run.later(() => {

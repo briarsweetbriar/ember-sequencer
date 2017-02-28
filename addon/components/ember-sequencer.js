@@ -57,13 +57,6 @@ export default Component.extend({
   },
 
   actions: {
-    preloadNextFrame() {
-      if (this.get('isDestroyed')) { return; }
-      const nextFrame = get(this, 'frames')[get(this, 'index') + 1];
-
-      if (isPresent(nextFrame)) { nextFrame.preload(); }
-    },
-
     registerFrame(frame) {
       if (this.get('isDestroyed')) { return; }
       get(this, 'frames').addObject(frame);

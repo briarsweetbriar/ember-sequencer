@@ -23,7 +23,7 @@ test('it registers itself upon insert', function(assert) {
 });
 
 test('animateIn triggers the inbound animation', function(assert) {
-  assert.expect(8);
+  assert.expect(6);
 
   const done = assert.async();
 
@@ -32,7 +32,6 @@ test('animateIn triggers the inbound animation', function(assert) {
 
   this.set('animationIn', animationIn);
   this.set('register', (arg) => { frame = arg; });
-  this.set('preloadNextFrame', () => { assert.ok(true, 'preloadNextFrame was run'); });
   this.set('transitionToNextFrame', () => { assert.ok(true, 'transitionToNextFrame was run'); });
   this.set('animationAdapter', {
     animate(element, animation) {
@@ -43,13 +42,11 @@ test('animateIn triggers the inbound animation', function(assert) {
     }
   });
   this.render(hbs`
-    {{#ember-sequencer-frame preloadNextFrame=(action preloadNextFrame) transitionToNextFrame=(action transitionToNextFrame) register=(action register) animationAdapter=animationAdapter animationIn=animationIn duration=10 hook='frame' as |frame|}}
+    {{#ember-sequencer-frame transitionToNextFrame=(action transitionToNextFrame) register=(action register) animationAdapter=animationAdapter animationIn=animationIn duration=10 hook='frame' as |frame|}}
       <div data-test={{hook "test"}}>Test</div>
       <div data-test={{hook "isVisible"}}>{{frame.isVisible}}</div>
     {{/ember-sequencer-frame}}
   `);
-
-  assert.ok(!$hook('test').text(), 'frame not rendered initially');
 
   Ember.run.next(() => {
     frame.animateIn();
@@ -98,33 +95,5 @@ test('animateOut triggers the outbound animation', function(assert) {
 
       done();
     }, 100);
-  });
-});
-
-test('preload renders the frame content and applies the hidden class', function(assert) {
-  assert.expect(3);
-
-  const done = assert.async();
-
-  let frame;
-
-  this.set('register', (arg) => { frame = arg; });
-  this.render(hbs`
-    {{#ember-sequencer-frame register=(action register) hook='frame'}}
-      <div data-test={{hook "test"}}>Test</div>
-    {{/ember-sequencer-frame}}
-  `);
-
-  assert.ok(!$hook('test').text(), 'frame not rendered initially');
-
-  Ember.run.next(() => {
-    frame.preload();
-
-    Ember.run.next(() => {
-      assert.equal($hook('test').text(), 'Test', 'frame rendered after preload');
-      assert.ok($hook('frame').hasClass('ember-sequencer-frame-preloading'), 'has preloading class');
-
-      done();
-    });
   });
 });

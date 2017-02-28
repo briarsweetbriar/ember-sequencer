@@ -13,6 +13,9 @@ const { later } = run;
 export default Component.extend({
   layout,
 
+  isPreloading: true,
+  isRendered: true,
+
   classNames: ['ember-sequencer-frame'],
   classNameBindings: ['isPreloading:ember-sequencer-frame-preloading'],
 
@@ -24,18 +27,13 @@ export default Component.extend({
 
   animateIn() {
     if (this.get('isDestroyed')) { return; }
-    set(this, 'isRendered', true);
     set(this, 'isVisible', true);
     set(this, 'isPreloading', false);
 
     get(this, 'animationAdapter').animate(this.element, get(this, 'animationIn')).then(() => {
-      run(() => {
-        this.attrs.preloadNextFrame();
-
-        later(() => {
-          this.attrs.transitionToNextFrame();
-        }, get(this, 'duration'));
-      });
+      later(() => {
+        this.attrs.transitionToNextFrame();
+      }, get(this, 'duration'));
     });
   },
 
@@ -43,15 +41,9 @@ export default Component.extend({
     get(this, 'animationAdapter').animate(this.element, get(this, 'animationOut')).then(() => {
       run(() => {
         if (this.get('isDestroyed')) { return; }
-        set(this, 'isRendered', false);
         set(this, 'isVisible', false);
+        set(this, 'isRendered', false);
       });
     });
-  },
-
-  preload() {
-    if (this.get('isDestroyed')) { return; }
-    set(this, 'isRendered', true);
-    set(this, 'isPreloading', true);
   }
 });
